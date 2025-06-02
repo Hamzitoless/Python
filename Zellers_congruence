@@ -1,0 +1,67 @@
+class DateCalculator:
+    def __init__(self, year, month, day):
+        #Initialize with year, month, and day
+        self.year = year
+        self.month = month
+        self.day = day
+        self._validate_input()
+
+    def _validate_input(self):
+        #Validating the input date.
+        if not isinstance(self.year, int) or not isinstance(self.month, int) or not isinstance(self.day, int):
+            raise ValueError("Year, month, and day must be integers.")
+        if self.month < 1 or self.month > 12:
+            raise ValueError("Month must be between 1 and 12.")
+        if self.day < 1 or self.day > 31:
+            raise ValueError("Day must be between 1 and 31.")
+        if self.year < 1582:  
+            raise ValueError("Year must be 1582 or later (Gregorian calendar).")
+
+    def _adjust_month_year(self):
+        #Adjusting month and year for January and February
+        m = self.month
+        y = self.year
+        if self.month <= 2:
+            m += 12
+            y -= 1
+        return m, y
+
+    def calculate_day_of_week(self):
+        #Calculating the day of the week using Zeller's Congruence
+        q = self.day
+        m, y = self._adjust_month_year()
+        K = y % 100 
+        J = y // 100 
+
+       
+        h = (q + ((13 * (m + 1)) // 5) + K + (K // 4) + (J // 4) + 5 * J) % 7
+
+        
+        days = ["Saturday", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        return days[h]
+
+    def get_day_of_week(self):
+        #Returning the day of the week for the given date
+        return self.calculate_day_of_week()
+
+
+
+def main():
+    try:
+        
+        date = DateCalculator(1589, 9, 15)
+        print(f"September 15, 1589 was a {date.get_day_of_week()}.")
+
+        test_dates = [
+            (2023, 4, 30),  
+            (2000, 1, 1),   
+            (1582, 10, 15),
+        ]
+        for year, month, day in test_dates:
+            date = DateCalculator(year, month, day)
+            print(f"{month}/{day}/{year} was a {date.get_day_of_week()}.")
+    except ValueError as e:
+        print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()

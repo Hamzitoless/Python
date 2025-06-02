@@ -17,4 +17,4 @@ leap: bool = is_leap(year)
 if leap:
     print("The year is a leap year")
 else:
-    print("The year is not a leap year") 
+    print("The year is not a leap year") 
